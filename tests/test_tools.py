@@ -211,7 +211,7 @@ def test_fetch_url_rejects_bad_input_before_any_call(url, pat):
 
 def test_fetch_url_timeout_and_failure_leak_no_secret():
     for exc in (requests.ConnectTimeout(f"proxy http://puser:{PROXY_PASS}@gw.example:2222 {KEY}"),
-                requests.ProxyError(f"tunnel failed for http://puser:{PROXY_PASS}@gw.example:2222"),
+                requests.exceptions.ProxyError(f"tunnel failed for http://puser:{PROXY_PASS}@gw.example:2222"),
                 requests.TooManyRedirects("x")):
         c, _ = client(FETCH_ROUTES)
         with pytest.raises(Proxy302Error) as e:
