@@ -1,6 +1,6 @@
 identity:
   name: fetch_url
-  author: AUTHOR_GITHUB_NAME
+  author: proxy302
   label:
     en_US: Fetch a web page through my proxy
     zh_Hans: 通过我的代理抓取网页

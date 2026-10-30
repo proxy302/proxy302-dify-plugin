@@ -1,6 +1,6 @@
 identity:
   name: list_products
-  author: AUTHOR_GITHUB_NAME
+  author: proxy302
   label:
     en_US: List products and plans
     zh_Hans: 产品与套餐列表

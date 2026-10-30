@@ -1,6 +1,6 @@
 identity:
   name: list_my_proxies
-  author: AUTHOR_GITHUB_NAME
+  author: proxy302
   label:
     en_US: List my proxies and static IPs
     zh_Hans: 我的代理与静态 IP

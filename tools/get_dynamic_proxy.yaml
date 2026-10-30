@@ -1,6 +1,6 @@
 identity:
   name: get_dynamic_proxy
-  author: AUTHOR_GITHUB_NAME
+  author: proxy302
   label:
     en_US: Get a dynamic residential proxy
     zh_Hans: 获取动态住宅代理

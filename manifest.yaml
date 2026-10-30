@@ -1,6 +1,6 @@
 version: 0.0.1
 type: plugin
-author: AUTHOR_GITHUB_NAME
+author: proxy302
 name: proxy302
 label:
   en_US: Proxy302

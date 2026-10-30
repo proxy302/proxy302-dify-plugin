@@ -1,6 +1,6 @@
 identity:
   name: get_account_usage
-  author: AUTHOR_GITHUB_NAME
+  author: proxy302
   label:
     en_US: Account, traffic balance and usage
     zh_Hans: 账户、流量余额与用量
