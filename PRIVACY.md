@@ -16,7 +16,7 @@ This plugin lets Dify apps call the [Proxy302](https://proxy302.com) API with th
 
 ## Third parties
 
-- **Proxy302** (`proxy302.com`), operated by the Proxy302 service, receives the API key and request parameters. Its own privacy policy and terms apply to the account and the proxy service: https://proxy302.com/
+- **Proxy302** (`proxy302.com`), operated by the Proxy302 service, receives the API key and request parameters. Its own privacy policy and terms apply to the account and the proxy service: https://proxy302.com/privacy/
 - **Target websites** contacted by `fetch_url` receive an ordinary HTTP request from a Proxy302 exit IP. Do not put personal data or secrets into the URL.
 
 No analytics, telemetry or advertising services are used. No data is sent to the plugin author or to any third party other than the two above.
@@ -31,4 +31,4 @@ The plugin does not intentionally process health, financial-card, biometric, chi
 
 ## Contact
 
-CONTACT_EMAIL@example.com
+partners@proxy302.com

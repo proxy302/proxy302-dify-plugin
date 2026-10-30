@@ -25,7 +25,7 @@ def format_bytes(value: object) -> str:
 def mask(secret: str | None) -> str:
     if not secret:
         return ""
-    return "****" if len(secret) <= 4 else f"{secret[:2]}****{secret[-2:]}"
+    return "********"
 
 
 def proxy_url(protocol: str, user: str, password: str, host: str, port: int) -> str:

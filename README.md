@@ -2,8 +2,8 @@
 
 Read-only [Proxy302](https://proxy302.com) tools for Dify workflows, chatflows and agents: check your traffic and usage, browse countries and plans, look up your residential proxies, and fetch a public web page through your own Proxy302 proxy.
 
-- Source repository: https://github.com/AUTHOR_GITHUB_NAME/proxy302-dify-plugin (SOURCE_REPO_URL: to be filled in once the repository is published)
-- Contact: CONTACT_EMAIL@example.com
+- Source repository: https://github.com/1596941391qq/proxy302-dify-plugin
+- Contact: partners@proxy302.com
 
 > **Never spends money.** The plugin cannot buy, renew or top up anything and cannot create a proxy. It only reads your account, with one exception: `fetch_url` sends a page request through a proxy you already own, which uses your existing prepaid proxy traffic.
 
@@ -76,3 +76,7 @@ dify plugin package .
 ```
 
 Requests identify themselves with `User-Agent` and `X-Proxy302-Client` set to `proxy302-dify-plugin/<version>`.
+
+## License
+
+MIT. See [LICENSE](LICENSE).

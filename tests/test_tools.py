@@ -66,7 +66,7 @@ def test_server_message_echoing_key_is_redacted():
 def test_redact_helpers():
     assert "hunter22" not in redact("http://u:hunter22@h:1/x", ["hunter22"])
     assert "abcdefghij" not in redact("Authorization: Basic abcdefghij==")
-    assert mask("abcdefgh") == "ab****gh" and format_bytes("1073741824") == "1.00 GB"
+    assert mask("abcdefgh") == "********" and mask("ab") == "********" and format_bytes("1073741824") == "1.00 GB"
     assert proxy_url("http", "u", "p@ss", "h", 2) == "http://u:p%40ss@h:2"
 
 
@@ -119,7 +119,7 @@ def test_list_my_proxies_masks_by_default():
     c, api = client({"tokens/static/ip": env({"data": [TOKEN], "total": 1, "page": 1, "has_more": False})})
     out = service.list_my_proxies(c)
     text = json.dumps(out)
-    assert PROXY_PASS not in text and "pX****7z" in text
+    assert PROXY_PASS not in text and "********" in text
     assert api.calls[0]["params"]["status"] == 1 and api.calls[0]["params"]["page_size"] == 20
     full = service.list_my_proxies(c, include_credentials="true")
     assert PROXY_PASS in json.dumps(full)
