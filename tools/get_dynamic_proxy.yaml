@@ -1,0 +1,59 @@
+identity:
+  name: get_dynamic_proxy
+  author: AUTHOR_GITHUB_NAME
+  label:
+    en_US: Get a dynamic residential proxy
+    zh_Hans: 获取动态住宅代理
+description:
+  human:
+    en_US: "Return an existing rotating residential proxy of yours for a country. Never creates a new one. The password is masked unless you ask for credentials."
+    zh_Hans: "返回你账户中某国家已有的动态住宅代理。不会新建代理。默认遮蔽密码，需要时可开启显示凭据。"
+  llm: "Look up an existing rotating residential proxy on the account for a country. Read-only: it never creates or buys a proxy and fails with guidance if none exists. Password is masked unless include_credentials is true."
+parameters:
+  - name: country
+    type: string
+    required: true
+    label:
+      en_US: Country
+      zh_Hans: 国家
+    human_description:
+      en_US: Country name, ISO code or id, for example "United States" or "US".
+      zh_Hans: 国家名称、ISO 代码或 id，例如 “United States” 或 “US”。
+    llm_description: Country name, ISO code or numeric id, e.g. "United States" or "US".
+    form: llm
+  - name: protocol
+    type: select
+    required: false
+    default: http
+    label:
+      en_US: Protocol
+      zh_Hans: 协议
+    human_description:
+      en_US: Proxy protocol.
+      zh_Hans: 代理协议。
+    llm_description: Proxy protocol, http or socks5. Default http.
+    options:
+      - value: http
+        label:
+          en_US: HTTP
+          zh_Hans: HTTP
+      - value: socks5
+        label:
+          en_US: SOCKS5
+          zh_Hans: SOCKS5
+    form: llm
+  - name: include_credentials
+    type: boolean
+    required: false
+    default: false
+    label:
+      en_US: Include password and connection URL
+      zh_Hans: 包含密码与连接 URL
+    human_description:
+      en_US: Off by default. When on, the real proxy password is returned and may be stored in workflow logs.
+      zh_Hans: 默认关闭。开启后会返回真实代理密码，并可能被记录在工作流日志中。
+    llm_description: Return the real proxy password and connection URL. Default false (password masked).
+    form: form
+extra:
+  python:
+    source: tools/get_dynamic_proxy.py

@@ -1,0 +1,29 @@
+identity:
+  name: get_account_usage
+  author: AUTHOR_GITHUB_NAME
+  label:
+    en_US: Account, traffic balance and usage
+    zh_Hans: 账户、流量余额与用量
+description:
+  human:
+    en_US: "Show the account tied to the API key, wallet balance (PTC), remaining prepaid traffic, and traffic used per day for the last N days. Read-only."
+    zh_Hans: "查看 API 密钥对应的账户、钱包余额（PTC）、剩余预付流量以及最近 N 天的每日流量用量。只读。"
+  llm: "Show the Proxy302 account tied to the API key, wallet balance in PTC, remaining prepaid traffic, and traffic used for the last N days. Read-only."
+parameters:
+  - name: days
+    type: number
+    required: false
+    default: 7
+    min: 1
+    max: 90
+    label:
+      en_US: Days of usage
+      zh_Hans: 统计天数
+    human_description:
+      en_US: How many past days of usage to include (1-90).
+      zh_Hans: 统计最近多少天的用量（1-90）。
+    llm_description: Number of past days of traffic usage to include, integer 1 to 90. Default 7.
+    form: llm
+extra:
+  python:
+    source: tools/get_account_usage.py

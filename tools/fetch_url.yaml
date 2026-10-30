@@ -1,0 +1,87 @@
+identity:
+  name: fetch_url
+  author: AUTHOR_GITHUB_NAME
+  label:
+    en_US: Fetch a web page through my proxy
+    zh_Hans: 通过我的代理抓取网页
+description:
+  human:
+    en_US: "Request a public http(s) URL through one of your own Proxy302 proxies (optionally exiting in a given country) and return the page as Markdown, plain text or raw. No JavaScript rendering. Uses your proxy traffic."
+    zh_Hans: "通过你自己的 Proxy302 代理（可指定出口国家）请求一个公开的 http(s) 网址，并以 Markdown、纯文本或原始内容返回。不执行 JavaScript，会消耗你的代理流量。"
+  llm: "Fetch a public http or https URL through one of the user's own Proxy302 dynamic proxies and return Markdown, text or raw content. No JavaScript rendering. Only http/https, URL up to 2048 characters, no credentials in the URL, no private or local addresses. Body capped at 5 MB, output capped by max_chars. Uses the user's proxy traffic."
+parameters:
+  - name: url
+    type: string
+    required: true
+    label:
+      en_US: URL
+      zh_Hans: 网址
+    human_description:
+      en_US: Public http or https URL (max 2048 characters, no user:password@ part).
+      zh_Hans: 公开的 http 或 https 网址（最长 2048 字符，不能含 user:password@）。
+    llm_description: Absolute http:// or https:// URL, at most 2048 characters, without credentials. Private, loopback and local addresses are rejected.
+    form: llm
+  - name: country
+    type: string
+    required: false
+    label:
+      en_US: Exit country
+      zh_Hans: 出口国家
+    human_description:
+      en_US: Picks one of your existing dynamic proxies in this country.
+      zh_Hans: 选用你已有的该国家动态代理。
+    llm_description: Optional exit country (name, ISO code or id); uses one of the user's existing dynamic proxies for it.
+    form: llm
+  - name: token_id
+    type: string
+    required: false
+    label:
+      en_US: Proxy id
+      zh_Hans: 代理 id
+    human_description:
+      en_US: Use a specific proxy from the list-my-proxies tool.
+      zh_Hans: 指定 “我的代理” 列表中的某个代理。
+    llm_description: Optional token_id of a specific proxy returned by list_my_proxies. Overrides country.
+    form: llm
+  - name: format
+    type: select
+    required: false
+    default: markdown
+    label:
+      en_US: Output format
+      zh_Hans: 输出格式
+    human_description:
+      en_US: Markdown, plain text or raw body.
+      zh_Hans: Markdown、纯文本或原始内容。
+    llm_description: markdown (default), text or raw.
+    options:
+      - value: markdown
+        label:
+          en_US: Markdown
+          zh_Hans: Markdown
+      - value: text
+        label:
+          en_US: Plain text
+          zh_Hans: 纯文本
+      - value: raw
+        label:
+          en_US: Raw
+          zh_Hans: 原始内容
+    form: llm
+  - name: max_chars
+    type: number
+    required: false
+    default: 20000
+    min: 500
+    max: 200000
+    label:
+      en_US: Max characters
+      zh_Hans: 最大字符数
+    human_description:
+      en_US: Truncate the returned content to this many characters (500-200000).
+      zh_Hans: 将返回内容截断到该字符数（500-200000）。
+    llm_description: Maximum characters of content to return, 500 to 200000. Default 20000.
+    form: llm
+extra:
+  python:
+    source: tools/fetch_url.py

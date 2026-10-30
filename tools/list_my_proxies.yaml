@@ -1,0 +1,108 @@
+identity:
+  name: list_my_proxies
+  author: AUTHOR_GITHUB_NAME
+  label:
+    en_US: List my proxies and static IPs
+    zh_Hans: 我的代理与静态 IP
+description:
+  human:
+    en_US: "List proxies on the account: dynamic or static, billed by traffic or by IP. Passwords are masked unless credentials are requested. Read-only."
+    zh_Hans: "列出账户中的代理：动态或静态，按流量或按 IP 计费。默认遮蔽密码。只读。"
+  llm: "List proxies on the account (dynamic or static, billed by traffic or by IP). Passwords are masked unless include_credentials is true. Read-only."
+parameters:
+  - name: kind
+    type: select
+    required: false
+    default: static
+    label:
+      en_US: Kind
+      zh_Hans: 类型
+    human_description:
+      en_US: Dynamic (rotating) or static proxies.
+      zh_Hans: 动态（轮换）或静态代理。
+    llm_description: dynamic or static. Default static.
+    options:
+      - value: static
+        label:
+          en_US: Static
+          zh_Hans: 静态
+      - value: dynamic
+        label:
+          en_US: Dynamic
+          zh_Hans: 动态
+    form: llm
+  - name: billing
+    type: select
+    required: false
+    default: ip
+    label:
+      en_US: Billing
+      zh_Hans: 计费方式
+    human_description:
+      en_US: Billed per IP or per traffic.
+      zh_Hans: 按 IP 或按流量计费。
+    llm_description: ip or traffic. Default ip. Dynamic residential proxies are billed by traffic.
+    options:
+      - value: ip
+        label:
+          en_US: By IP
+          zh_Hans: 按 IP
+      - value: traffic
+        label:
+          en_US: By traffic
+          zh_Hans: 按流量
+    form: llm
+  - name: page_size
+    type: number
+    required: false
+    default: 20
+    min: 1
+    max: 100
+    label:
+      en_US: Page size
+      zh_Hans: 每页数量
+    human_description:
+      en_US: Rows per page (1-100).
+      zh_Hans: 每页条数（1-100）。
+    llm_description: Rows per page, 1 to 100. Default 20.
+    form: llm
+  - name: page
+    type: number
+    required: false
+    default: 1
+    min: 1
+    label:
+      en_US: Page
+      zh_Hans: 页码
+    human_description:
+      en_US: Page number, starting at 1.
+      zh_Hans: 页码，从 1 开始。
+    llm_description: Page number starting at 1.
+    form: llm
+  - name: active_only
+    type: boolean
+    required: false
+    default: true
+    label:
+      en_US: Active only
+      zh_Hans: 仅有效
+    human_description:
+      en_US: Only list active proxies.
+      zh_Hans: 只列出有效代理。
+    llm_description: Only active proxies when true. Default true.
+    form: llm
+  - name: include_credentials
+    type: boolean
+    required: false
+    default: false
+    label:
+      en_US: Include passwords
+      zh_Hans: 包含密码
+    human_description:
+      en_US: Off by default. When on, real proxy passwords are returned and may be stored in workflow logs.
+      zh_Hans: 默认关闭。开启后会返回真实代理密码，并可能被记录在工作流日志中。
+    llm_description: Return real proxy passwords. Default false (masked).
+    form: form
+extra:
+  python:
+    source: tools/list_my_proxies.py

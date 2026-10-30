@@ -1,0 +1,15 @@
+identity:
+  name: list_products
+  author: AUTHOR_GITHUB_NAME
+  label:
+    en_US: List products and plans
+    zh_Hans: 产品与套餐列表
+description:
+  human:
+    en_US: "Describe the proxy products and list the static IP plans (data center and residential) with their plan ids. Read-only; prices are on proxy302.com."
+    zh_Hans: "介绍代理产品，并列出静态 IP 套餐（机房与住宅）及其 id。只读，价格见 proxy302.com。"
+  llm: "Describe Proxy302 proxy products and list static IP plans (data center and residential) with plan ids. Read-only. Does not buy anything."
+parameters: []
+extra:
+  python:
+    source: tools/list_products.py

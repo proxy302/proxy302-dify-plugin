@@ -1,0 +1,38 @@
+identity:
+  author: AUTHOR_GITHUB_NAME
+  name: proxy302
+  label:
+    en_US: Proxy302
+    zh_Hans: Proxy302
+  description:
+    en_US: Check Proxy302 traffic and usage, browse countries and plans, look up your residential proxies, and fetch web pages through your own proxy. Read-only; never spends money.
+    zh_Hans: 查询 Proxy302 流量与用量、国家与套餐、已有的住宅代理，并通过你自己的代理抓取网页。只读，不会产生任何消费。
+  icon: icon.svg
+  tags:
+    - utilities
+    - productivity
+credentials_for_provider:
+  api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: Proxy302 API key
+      zh_Hans: Proxy302 API 密钥
+    placeholder:
+      en_US: "<key id>:<secret>"
+      zh_Hans: "<key id>:<secret>"
+    help:
+      en_US: 'Create an API key in the Proxy302 console (API keys page) and paste it as "key id:secret". Saving it only makes one read-only call.'
+      zh_Hans: 在 Proxy302 控制台的 API 密钥页创建密钥，并按 “key id:secret” 的形式粘贴。保存时只会发起一次只读调用。
+    url: https://proxy302.com/
+tools:
+  - tools/get_account_usage.yaml
+  - tools/list_countries.yaml
+  - tools/list_regions.yaml
+  - tools/list_products.yaml
+  - tools/get_dynamic_proxy.yaml
+  - tools/list_my_proxies.yaml
+  - tools/fetch_url.yaml
+extra:
+  python:
+    source: provider/proxy302.py

@@ -1,0 +1,26 @@
+identity:
+  name: list_countries
+  author: AUTHOR_GITHUB_NAME
+  label:
+    en_US: List countries
+    zh_Hans: 国家列表
+description:
+  human:
+    en_US: "List countries Proxy302 can target, with ids and ISO codes. Optional name filter. Read-only."
+    zh_Hans: "列出 Proxy302 可定位的国家，含 id 与 ISO 代码，可按名称筛选。只读。"
+  llm: "List countries Proxy302 can target. Optional name filter (substring). Returns ids usable in other tools. Read-only."
+parameters:
+  - name: name
+    type: string
+    required: false
+    label:
+      en_US: Name filter
+      zh_Hans: 名称筛选
+    human_description:
+      en_US: Optional substring filter, for example "ger".
+      zh_Hans: 可选的名称片段，例如 “ger”。
+    llm_description: Optional substring of the country name, for example "ger". Max 100 characters.
+    form: llm
+extra:
+  python:
+    source: tools/list_countries.py

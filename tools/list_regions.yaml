@@ -1,0 +1,48 @@
+identity:
+  name: list_regions
+  author: AUTHOR_GITHUB_NAME
+  label:
+    en_US: List states or cities
+    zh_Hans: 州/省与城市列表
+description:
+  human:
+    en_US: "List the states of a country, or the cities of a state. Pass either a country or a state id. Read-only."
+    zh_Hans: "列出某国家的州/省，或某州/省的城市。传入国家或州/省 id 之一。只读。"
+  llm: "List states of a country, or cities of a state. Pass either country (name, ISO code or id) or state_id. Read-only."
+parameters:
+  - name: country
+    type: string
+    required: false
+    label:
+      en_US: Country
+      zh_Hans: 国家
+    human_description:
+      en_US: Country name, ISO code or id. Lists its states.
+      zh_Hans: 国家名称、ISO 代码或 id，用于列出其州/省。
+    llm_description: Country name, ISO code or numeric id; lists its states. Use this or state_id.
+    form: llm
+  - name: state_id
+    type: number
+    required: false
+    label:
+      en_US: State id
+      zh_Hans: 州/省 id
+    human_description:
+      en_US: State id. Lists its cities.
+      zh_Hans: 州/省 id，用于列出其城市。
+    llm_description: Numeric state id (from a previous list_regions call); lists its cities.
+    form: llm
+  - name: name
+    type: string
+    required: false
+    label:
+      en_US: Name filter
+      zh_Hans: 名称筛选
+    human_description:
+      en_US: Optional name filter.
+      zh_Hans: 可选的名称筛选。
+    llm_description: Optional name filter, max 100 characters.
+    form: llm
+extra:
+  python:
+    source: tools/list_regions.py
