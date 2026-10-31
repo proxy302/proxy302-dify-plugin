@@ -12,19 +12,32 @@ identity:
     - utilities
     - productivity
 credentials_for_provider:
-  api_key:
+  key_id:
     type: secret-input
     required: true
     label:
-      en_US: Proxy302 API key
-      zh_Hans: Proxy302 API 密钥
+      en_US: Key ID
+      zh_Hans: Key ID
     placeholder:
-      en_US: "<key id>:<secret>"
-      zh_Hans: "<key id>:<secret>"
+      en_US: PROXY302_KEY_ID
+      zh_Hans: PROXY302_KEY_ID
     help:
-      en_US: 'Create an API key in the Proxy302 console (API keys page) and paste it as "key id:secret". Saving it only makes one read-only call.'
-      zh_Hans: 在 Proxy302 控制台的 API 密钥页创建密钥，并按 “key id:secret” 的形式粘贴。保存时只会发起一次只读调用。
-    url: https://proxy302.com/
+      en_US: 'In the Proxy302 console, open API keys, open your key and click "Copy as env vars". Paste the PROXY302_KEY_ID value here.'
+      zh_Hans: 在 Proxy302 控制台打开「API 密钥」，点开你的密钥，点「复制为环境变量」，把 PROXY302_KEY_ID 的值粘贴到这里。
+    url: https://proxy302.com/api-keys
+  key_secret:
+    type: secret-input
+    required: true
+    label:
+      en_US: Key secret
+      zh_Hans: Key secret
+    placeholder:
+      en_US: PROXY302_KEY_SECRET
+      zh_Hans: PROXY302_KEY_SECRET
+    help:
+      en_US: 'Paste the PROXY302_KEY_SECRET value from the same "Copy as env vars". Saving makes one read-only call to check the key.'
+      zh_Hans: 粘贴同一次「复制为环境变量」里 PROXY302_KEY_SECRET 的值。保存时只会发起一次只读调用来检查密钥。
+    url: https://proxy302.com/api-keys
 tools:
   - tools/get_account_usage.yaml
   - tools/list_countries.yaml

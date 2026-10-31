@@ -3,7 +3,7 @@ import json
 import pytest
 import requests
 
-from conftest import KEY, PROXY_PASS, TOKEN, FakeApi, FakeResp, FakeTool, env
+from conftest import CREDS, KEY, PROXY_PASS, TOKEN, FakeApi, FakeResp, FakeTool, env
 from proxy302_client import CLIENT_ID, service
 from proxy302_client.client import Proxy302Client, build_authorization
 from proxy302_client.errors import Proxy302Error, redact
@@ -250,7 +250,7 @@ def test_glue_emits_json_and_text_and_redacts_errors(monkeypatch):
     from proxy302_client.glue import run_json_tool
 
     monkeypatch.setattr("proxy302_client.client.requests.get", FakeApi({"area/country": env({"data": [{"id": 1, "name": "A", "code": "A"}]})}).get)
-    tool = FakeTool({"api_key": KEY})
+    tool = FakeTool(CREDS)
     msgs = list(run_json_tool(tool, lambda c: service.list_countries(c)))
     assert msgs[0][0] == "json" and msgs[1][0] == "text"
     monkeypatch.setattr("proxy302_client.client.requests.get", FakeApi({"area/country": env(None, 1, f"nope {KEY}")}).get)
@@ -259,7 +259,7 @@ def test_glue_emits_json_and_text_and_redacts_errors(monkeypatch):
     no_secret(str(e.value))
     with pytest.raises(Exception) as e:
         list(run_json_tool(FakeTool({}), lambda c: service.list_countries(c)))
-    assert "API key" in str(e.value)
+    assert "Key ID" in str(e.value) and "Key secret" in str(e.value)
 
 
 def test_unexpected_exception_is_redacted():
@@ -269,7 +269,7 @@ def test_unexpected_exception_is_redacted():
         raise RuntimeError(f"db password {KEY}")
 
     with pytest.raises(Exception) as e:
-        list(run_json_tool(FakeTool({"api_key": KEY}), boom))
+        list(run_json_tool(FakeTool(CREDS), boom))
     no_secret(str(e.value))
 
 
@@ -280,15 +280,20 @@ def test_provider_credential_validation(monkeypatch):
     p = Proxy302Provider.__new__(Proxy302Provider)
     api = FakeApi({"user/users/me": env({"name": "n"})})
     monkeypatch.setattr("proxy302_client.client.requests.get", api.get)
-    p._validate_credentials({"api_key": KEY})
+    p._validate_credentials(CREDS)
     assert [c["url"].rsplit("/", 1)[-1] for c in api.calls] == ["me"]  # exactly one cheap call
-    for creds in ({}, {"api_key": "  "}, {"api_key": "bad"}):
-        with pytest.raises(ToolProviderCredentialValidationError):
+    assert api.calls[0]["headers"]["Authorization"] == build_authorization(KEY)
+    bad = ({}, {"key_id": "kid_9f3a"}, {"key_secret": "SUPERSECRETvalue123"}, {"key_id": "  ", "key_secret": "  "},
+           {"key_id": "kid:9f3a", "key_secret": "x"}, {"api_key": KEY})
+    for creds in bad:
+        with pytest.raises(ToolProviderCredentialValidationError) as e:
             p._validate_credentials(creds)
+        no_secret(str(e.value))
+    assert len(api.calls) == 1  # malformed credentials never reach the API
     for resp in (FakeResp(status=401), env(None, 40100, f"bad {KEY}"), requests.ConnectionError(KEY)):
         monkeypatch.setattr("proxy302_client.client.requests.get", FakeApi({"user/users/me": resp}).get)
         with pytest.raises(ToolProviderCredentialValidationError) as e:
-            p._validate_credentials({"api_key": KEY})
+            p._validate_credentials(CREDS)
         no_secret(str(e.value))
 
 
@@ -299,7 +304,7 @@ def test_tool_classes_run_through_glue(monkeypatch):
 
     def make(cls):
         t = cls.__new__(cls)
-        t.runtime = FakeTool({"api_key": KEY}).runtime
+        t.runtime = FakeTool(CREDS).runtime
         t.create_json_message = lambda o: ("json", o)
         t.create_text_message = lambda s: ("text", s)
         return t
@@ -317,3 +322,11 @@ def test_tool_classes_run_through_glue(monkeypatch):
     with pytest.raises(Exception) as e:
         list(make(FetchUrlTool)._invoke({"url": "ftp://x/"}))
     no_secret(str(e.value))
+
+
+def test_credentials_join_and_tolerate_env_quotes():
+    from proxy302_client.client import api_key_from_credentials
+
+    assert api_key_from_credentials(CREDS) == KEY
+    # pasted straight from `export PROXY302_KEY_ID="..."` lines, quotes and spaces included
+    assert api_key_from_credentials({"key_id": ' "kid_9f3a" ', "key_secret": '"SUPERSECRETvalue123"'}) == KEY

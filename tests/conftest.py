@@ -7,6 +7,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 KEY = "kid_9f3a:SUPERSECRETvalue123"
+CREDS = {"key_id": "kid_9f3a", "key_secret": "SUPERSECRETvalue123"}
 PROXY_PASS = "pXy-PASSWORD-77z"
 
 

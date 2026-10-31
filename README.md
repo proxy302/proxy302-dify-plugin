@@ -10,15 +10,15 @@ Read-only [Proxy302](https://proxy302.com) tools for Dify workflows, chatflows a
 ## Installation
 
 1. In Dify, open **Plugins**, find **Proxy302** in the Marketplace and install it. (Self-hosted installs from a `.difypkg` file need signature verification disabled, or the package must come from the Marketplace.)
-2. Open the plugin's **Authorize** dialog and paste your Proxy302 API key.
+2. Open the plugin's **Authorize** dialog and paste your Proxy302 key ID and key secret.
 
 ## Credential
 
-One credential is required: a **Proxy302 API key** in the form `key id:secret`.
+Two fields are required: the **key ID** and **key secret** of a Proxy302 API key.
 
-1. Sign in to the [Proxy302 console](https://proxy302.com/) and open the API keys page.
-2. Create a key and copy its key id and secret.
-3. Paste them into Dify as `key id:secret` (joined by a colon).
+1. Sign in to the [Proxy302 console](https://proxy302.com/) and open **API keys**.
+2. Create a key (or open an existing one) and click **Copy as env vars**. This copies two lines: `PROXY302_KEY_ID` and `PROXY302_KEY_SECRET`.
+3. In Dify, paste the `PROXY302_KEY_ID` value into **Key ID** and the `PROXY302_KEY_SECRET` value into **Key secret**.
 
 When you save the credential the plugin makes a single read-only request (`GET /open_api/v3/user/users/me`) to check that the key works. The key is stored by Dify as a secret and is only ever sent to `proxy302.com` in an HTTP `Authorization: Basic` header.
 

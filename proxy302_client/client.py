@@ -24,8 +24,8 @@ def build_authorization(api_key: str | None) -> str:
     key = (api_key or "").strip()
     if not key:
         raise Proxy302Error(
-            "No Proxy302 API key is configured. Create one in the Proxy302 console and "
-            'paste it as "<key id>:<secret>".'
+            "No Proxy302 API key is configured. In the Proxy302 console open API keys, open your key, click "
+            '"Copy as env vars" and paste PROXY302_KEY_ID and PROXY302_KEY_SECRET into the plugin\'s Key ID and Key secret.'
         )
     if re.match(r"(?i)^basic\s+", key):
         return key
@@ -34,6 +34,21 @@ def build_authorization(api_key: str | None) -> str:
     if re.fullmatch(r"[A-Za-z0-9+/]+={0,2}", key) and len(key) >= 16:
         return "Basic " + key
     raise Proxy302Error('The Proxy302 API key must look like "<key id>:<secret>".')
+
+
+def api_key_from_credentials(credentials: dict[str, Any] | None) -> str:
+    """Join the provider's key_id and key_secret fields into "<key id>:<secret>"."""
+    creds = credentials or {}
+    key_id = str(creds.get("key_id") or "").strip().strip('"')
+    secret = str(creds.get("key_secret") or "").strip().strip('"')
+    if not key_id or not secret:
+        raise Proxy302Error(
+            "Both the Proxy302 key ID and key secret are required. In the Proxy302 console open API keys, "
+            'open your key and click "Copy as env vars": use PROXY302_KEY_ID and PROXY302_KEY_SECRET.'
+        )
+    if ":" in key_id:
+        raise Proxy302Error("The key ID must not contain a colon. Paste only the PROXY302_KEY_ID value.")
+    return f"{key_id}:{secret}"
 
 
 def key_secrets(api_key: str | None) -> list[str]:

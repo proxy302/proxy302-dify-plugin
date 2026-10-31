@@ -8,7 +8,7 @@ This plugin lets Dify apps call the [Proxy302](https://proxy302.com) API with th
 
 | Data | Where it comes from | Where it goes | Stored by the plugin? |
 |---|---|---|---|
-| Proxy302 API key (`key id:secret`) | Entered by the user as a Dify credential | Sent only to `https://proxy302.com` in an `Authorization: Basic` header | No. Stored by Dify as a secret credential. |
+| Proxy302 API key (key ID and key secret) | Entered by the user as two Dify credential fields | Sent only to `https://proxy302.com` in an `Authorization: Basic` header | No. Stored by Dify as a secret credential. |
 | Tool parameters (country, state id, page, days, proxy id, ...) | Workflow, agent or user | Sent to the Proxy302 API as query parameters | No |
 | Account data returned by Proxy302 (name, email, wallet balance, traffic usage, proxy list) | Proxy302 API | Returned to the Dify app as tool output. The email address and proxy host, port and username can appear in output. | No |
 | Proxy passwords | Proxy302 API | Masked in output by default. Returned in full only if the user turns on `include_credentials`; that output then lives wherever Dify keeps workflow logs. | No |

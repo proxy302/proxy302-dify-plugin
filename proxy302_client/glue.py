@@ -8,13 +8,16 @@ from typing import Any
 
 from dify_plugin.entities.tool import ToolInvokeMessage
 
-from .client import Proxy302Client
+from .client import Proxy302Client, api_key_from_credentials
 from .errors import Proxy302Error
 
 
 def client_from(tool: Any) -> Proxy302Client:
     creds = getattr(tool.runtime, "credentials", None) or {}
-    return Proxy302Client(creds.get("api_key"))
+    try:
+        return Proxy302Client(api_key_from_credentials(creds))
+    except Proxy302Error:
+        return Proxy302Client(None)  # the first request raises the "no key configured" message
 
 
 def run_json_tool(tool: Any, fn: Callable[[Proxy302Client], Any]) -> Generator[ToolInvokeMessage, None, None]:
