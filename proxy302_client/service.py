@@ -39,8 +39,13 @@ def resolve_area(client: Proxy302Client, kind: str, text: str, pid: str | None =
     text = (text or "").strip()
     if text.isdigit():
         return {"id": int(text), "name": text}
-    rows = (client.areas(kind, pid, text) or {}).get("data", [])
     q = text.lower()
+    if kind == "country" and len(q) == 2 and q.isalpha():
+        # The area search matches names only, so "us" alone would hit Australia, Russia, ...; take the ISO code first.
+        coded = [r for r in (client.areas(kind, None, None) or {}).get("data", []) if str(r.get("code") or "").lower() == q]
+        if len(coded) == 1:
+            return coded[0]
+    rows = (client.areas(kind, pid, text) or {}).get("data", [])
     exact = [r for r in rows if str(r.get("name", "")).lower() == q or str(r.get("code") or "").lower() == q]
     pick = exact if len(exact) == 1 else rows if len(rows) == 1 else []
     if len(pick) == 1:
@@ -48,7 +53,8 @@ def resolve_area(client: Proxy302Client, kind: str, text: str, pid: str | None =
     if not rows:
         raise Proxy302Error(f'No {kind} matches "{text}". Use list_countries / list_regions to see valid names.')
     names = ", ".join(f"{r.get('name')} (id {r.get('id')})" for r in rows[:10])
-    raise Proxy302Error(f'"{text}" matches several {kind}s: {names}. Pass the exact name or id.')
+    plural = {"country": "countries", "city": "cities"}.get(kind, f"{kind}s")
+    raise Proxy302Error(f'"{text}" matches several {plural}: {names}. Pass the exact name or id.')
 
 
 def _endpoint(row: dict[str, Any]) -> ProxyEndpoint | None:
@@ -181,7 +187,7 @@ def list_my_proxies(
         raise Proxy302Error("billing must be ip or traffic.")
     q: dict[str, Any] = {"page": as_int(page, 1, 1, 10**6), "page_size": as_int(page_size, 20, 1, 100)}
     if as_bool(active_only, True):
-        q["status"] = 1
+        q["status"] = 5 if billing == "traffic" else 1  # the API reports usable traffic tokens as 5, usable IP tokens as 1
     r = client.tokens(kind, billing, **q) or {}
     creds = as_bool(include_credentials)
     return {"total": r.get("total"), "page": r.get("page"), "has_more": r.get("has_more"),

@@ -108,6 +108,21 @@ def test_resolve_area_errors():
         service.resolve_area(c, "country", "gui")
 
 
+def test_resolve_country_iso_code_before_name_search():
+    # Live API 11-02: a name search for "us" returns Australia, Austria, Belarus, ... but not the United States.
+    rows = [{"id": 14, "name": "Australia", "code": "AU"}, {"id": 182, "name": "Russia", "code": "RU"},
+            {"id": 233, "name": "United States", "code": "US"}]
+    def area(params):
+        name = (params or {}).get("name") or ""
+        return env({"data": [r for r in rows if name.lower() in r["name"].lower()]})
+    c, api = client({"area/country": lambda: area(api.calls[-1]["params"])})
+    assert service.resolve_area(c, "country", "us")["id"] == 233
+    assert service.resolve_area(c, "country", "US")["id"] == 233
+    assert service.resolve_area(c, "country", "Russia")["id"] == 182
+    with pytest.raises(Proxy302Error, match="several countries"):
+        service.resolve_area(c, "country", "a")
+
+
 def test_list_products():
     c, _ = client({"payway/static_data_center": env({"data": [{"id": 1, "name": "x", "en_name": "DC"}]}), "payway/static_residential": env({"data": [{"id": 2, "name": "R"}]})})
     out = service.list_products(c)
@@ -125,6 +140,15 @@ def test_list_my_proxies_masks_by_default():
     assert PROXY_PASS in json.dumps(full)
     with pytest.raises(Proxy302Error):
         service.list_my_proxies(c, kind="x")
+
+
+def test_list_my_proxies_active_traffic_tokens_use_status_5():
+    # The API reports a usable pay-per-GB token as status 5 (6 = unusable); status 1 would always list nothing.
+    c, api = client({"tokens/dynamic/traffic": env({"data": [dict(TOKEN, status=5)], "total": 1, "page": 1, "has_more": False})})
+    out = service.list_my_proxies(c, kind="dynamic", billing="traffic")
+    assert api.calls[0]["params"]["status"] == 5 and len(out["proxies"]) == 1
+    service.list_my_proxies(c, kind="dynamic", billing="traffic", active_only="false")
+    assert "status" not in api.calls[1]["params"]
 
 
 def test_get_dynamic_proxy_reuse_and_never_creates():
