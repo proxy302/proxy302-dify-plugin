@@ -29,7 +29,7 @@ meta:
     entrypoint: main
   minimum_dify_version: 1.0.0
 privacy: PRIVACY.md
-repo: https://github.com/1596941391qq/proxy302-dify-plugin
+repo: https://github.com/proxy302/proxy302-dify-plugin
 contact: partners@proxy302.com
 network:
   domains:
